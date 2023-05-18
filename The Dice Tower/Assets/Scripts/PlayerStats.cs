@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class PlayerStats : MonoBehaviour
     public int Str = 0;
     public int Dex = 0;
     public int Int = 0;
+
+    public event EventHandler OnEnemyKill;
+
 
     void Start()
     {
@@ -46,15 +50,19 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    //Detecção de colisão passou pra HitDetection
+    /*private void OnCollisionEnter(Collision collision)
     {
         enemyStats = collision.gameObject.GetComponent<EnemyDamage>();
         if(collision.gameObject.tag == "Enemy" && playerMove.isAttacking)
         {
             DealDamage(5f);
         }
+    }*/
+    public void KillEnemy()
+    {
+        OnEnemyKill?.Invoke(this, EventArgs.Empty);
     }
-
     public void DealDamage(float damage)
     {
         if (enemyStats != null)
@@ -100,19 +108,20 @@ public class PlayerStats : MonoBehaviour
         if (currentExp == maxExp)
         {
             LevelUp();
-            PlayerPrefs.SetInt("Lvl", lvl);
-            PlayerPrefs.SetInt("Str", Str);
-            PlayerPrefs.SetInt("Int", Int);
-            PlayerPrefs.SetInt("Dex", Dex);
         }
     }
 
     public void LevelUp()
     {
+
         lvl++;
         ui.buttonS.SetActive(true);
         ui.buttonI.SetActive(true);
         ui.buttonD.SetActive(true);
         currentExp = 0;
+        PlayerPrefs.SetInt("Lvl", lvl);
+        PlayerPrefs.SetInt("Str", Str);
+        PlayerPrefs.SetInt("Int", Int);
+        PlayerPrefs.SetInt("Dex", Dex);
     }
 }
