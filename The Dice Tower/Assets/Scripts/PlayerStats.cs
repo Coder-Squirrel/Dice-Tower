@@ -14,6 +14,7 @@ public class PlayerStats : MonoBehaviour
 
     public StatButton buttonS, buttonI, buttonD;
     public UIScript ui;
+    public GameObject levelUp;
     public EnemyDamage enemyStats;
     public PlayerMove playerMove;
     public NextLevel next;
@@ -115,13 +116,11 @@ public class PlayerStats : MonoBehaviour
     {
 
         lvl++;
-        ui.buttonS.SetActive(true);
-        ui.buttonI.SetActive(true);
-        ui.buttonD.SetActive(true);
+        levelUp.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         currentExp = 0;
-        PlayerPrefs.SetInt("Lvl", lvl);
-        PlayerPrefs.SetInt("Str", Str);
-        PlayerPrefs.SetInt("Int", Int);
-        PlayerPrefs.SetInt("Dex", Dex);
     }
 }

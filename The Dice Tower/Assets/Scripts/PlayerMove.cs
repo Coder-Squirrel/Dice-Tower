@@ -15,15 +15,17 @@ public class PlayerMove : MonoBehaviour
     Vector2 currentMovementInput;
     Vector3 currentMovement;
 
-    public GameObject swordHitbox,sword,shield;
+    public GameObject swordHitbox,sword,shield,questMenu,inventoryMenu;
 
     CharacterController characterController;
 
     public Animator anim;
 
-    public bool isMovementPressed,weaponsOn;
+    public bool isMovementPressed,weaponsOn,questOn,inventoryOn;
     public bool isAttacking = false;
     public bool isBlocking = false;
+
+
 
     public event EventHandler OnInteract;
 
@@ -35,9 +37,9 @@ public class PlayerMove : MonoBehaviour
     {
         playerInput = new PlayerInputActions();
 
-        playerInput.Player.Move.started += OnMovementInput;
-        playerInput.Player.Move.canceled += OnMovementInput;
-        playerInput.Player.Move.performed += OnMovementInput;
+        //playerInput.Player.Move.started += OnMovementInput;
+        //playerInput.Player.Move.canceled += OnMovementInput;
+        //playerInput.Player.Move.performed += OnMovementInput;
 
         playerInput.Player.Attack.performed += context => Attack();
         playerInput.Player.Attack.canceled += context => CancelAttack();
@@ -60,17 +62,57 @@ public class PlayerMove : MonoBehaviour
         handleGravity();
         handleAnimation();
         characterController.Move(currentMovement * moveSpeed * Time.deltaTime);
-        if(currentMovement != Vector3.zero && isMovementPressed)
+        /*if(currentMovement != Vector3.zero && isMovementPressed)
         {
             
             Quaternion toRotation = Quaternion.LookRotation(currentMovement, Vector3.up);
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-        }
+        }*/
         if (Input.GetKeyDown(KeyCode.E)) 
         {
             //Dispara o Evento a ser Escutado por objetos Interagíveis
             OnInteract?.Invoke(this, EventArgs.Empty);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (!questOn)
+            {
+                //open Quest
+                questMenu.SetActive(true);
+                questOn = true;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                //close Quest
+                questMenu.SetActive(false);
+                questOn = false;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if(!inventoryOn)
+            {
+                inventoryMenu.SetActive(true);
+                inventoryOn = true;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                inventoryMenu.SetActive(false);
+                inventoryOn = false;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
     }
 
@@ -79,16 +121,10 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        characterController.transform.Rotate(Vector3.up * currentMovementInput.x * Time.deltaTime);
+
     }
 
-    void OnMovementInput(InputAction.CallbackContext context)
-    {
-        currentMovementInput = context.ReadValue<Vector2>();
-        currentMovement.x = currentMovementInput.x;
-        currentMovement.z = currentMovementInput.y;
-        isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
-    }
+
 
     private void GiveWeapons(object sender, EventArgs args)
     {

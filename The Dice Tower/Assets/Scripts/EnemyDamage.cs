@@ -27,7 +27,7 @@ public class EnemyDamage : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player" && playerMove.isBlocking == false)
         {
-            playerStats.TakeDamage(5f);
+            //playerStats.TakeDamage(5f);
         }
     }
 }
